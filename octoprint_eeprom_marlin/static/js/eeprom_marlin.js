@@ -13,6 +13,7 @@ $(function() {
         self.stateControls = true;
 
         self.setRegExVars = function(version) {
+            //console.log(version);
             // All versions
             self.eepromM501RegEx = /M501/;
             self.eepromOKRegEx = /ok/;
@@ -26,11 +27,9 @@ $(function() {
             self.eepromM851RegEx = /M851 ([Z])(.*)/;//Z-Probe Offset (mm)
             self.eepromM665RegEx = /M665 ([L])(.*)[^0-9]([R])(.*)[^0-9]([H])(.*)[^0-9]([S])(.*)[^0-9]([B])(.*)[^0-9]([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)/;//delta config
             self.eepromM666RegEx = /M666 ([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)/;//delta Enstop adjustement
-            self.eepromM900RegEx = /M900 ([K])(.*)[^0-9]([R])(.*)/;//Linear Advance
-           
 
             // Specific versions
-            if( version == "Marlin bugfix-2.0.x") {
+            if(version == "Marlin bugfix-2.0.x") {
                 self.eepromM900RegEx = /M900 ([K])([0-9.]+)(.*)/;//bugfix2.0.x
                 //Advanced: B<min_segment_time_us> S<min_feedrate> T<min_travel_feedrate> X<max_x_jerk> Y<max_y_jerk> Z<max_z_jerk> E<max_e_jerk>
                 self.eepromM205RegEx = /M205 ([B])(.*)[^0-9]([S])(.*)[^0-9]([T])(.*)[^0-9]([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)[^0-9]([E])(.*)/;
@@ -46,6 +45,7 @@ $(function() {
                 self.eepromM145S2RegEx = /M145 S2 ([H])(.*)[^0-9]([B])(.*)[^0-9]([F])(.*)/;
                 self.eepromM301RegEx = /M301 ([P])(.*)[^0-9]([I])(.*)[^0-9]([D])(.*)/;
                 self.eepromM204RegEx = /M204 ([P])(.*)[^0-9]([R])(.*)[^0-9]([T])(.*)/;
+                self.eepromM900RegEx = /M900 ([K])(.*)[^0-9]([R])(.*)/;//Linear Advance
             } else if (version == 'Marlin 1.1.0-RC1' || version == 'Marlin 1.1.0-RC2' || version == 'Marlin 1.1.0-RC3' || version == 'Marlin 1.1.0-RC4' || version == 'Marlin 1.1.0-RC5' || version == 'Marlin 1.1.0-RC6' || version == 'Marlin 1.1.0-RC7') {
                 self.eepromM205RegEx = /M205 ([S])(.*)[^0-9]([T])(.*)[^0-9]([B])(.*)[^0-9]([X])(.*)[^0-9]([Z])(.*)[^0-9]([E])(.*)/;
                 self.eepromM145S0RegEx = /M145 M0 ([H])(.*)[^0-9]([B])(.*)[^0-9]([F])(.*)/;
@@ -53,10 +53,12 @@ $(function() {
                 self.eepromM145S2RegEx = /M145 M2 ([H])(.*)[^0-9]([B])(.*)[^0-9]([F])(.*)/;
                 self.eepromM301RegEx = /M301 ([P])(.*)[^0-9]([I])(.*)[^0-9]([D])(.*)[^0-9]([C])(.*)[^0-9]([L])(.*)/;
                 self.eepromM204RegEx = /M204 ([P])(.*)[^0-9]([R])(.*)[^0-9]([T])(.*)/;
+                self.eepromM900RegEx = /M900 ([K])(.*)[^0-9]([R])(.*)/;//Linear Advance
             } else if (version == 'Marlin 1.0.2+' || version == 'Marlin V1.0.2;' || version == 'Marlin 1.0.2' || version == 'Marlin V1;') {
                 self.eepromM204RegEx = /M204 ([S])(.*)[^0-9]([T])(.*)/;
                 self.eepromM205RegEx = /M205 ([S])(.*)[^0-9]([T])(.*)[^0-9]([B])(.*)[^0-9]([X])(.*)[^0-9]([Z])(.*)[^0-9]([E])(.*)/;
                 self.eepromM301RegEx = /M301 ([P])(.*)[^0-9]([I])(.*)[^0-9]([D])(.*)/;
+                self.eepromM900RegEx = /M900 ([K])(.*)[^0-9]([R])(.*)/;//Linear Advance
             } else {
                 self.eepromM205RegEx = /M205 ([S])(.*)[^0-9]([T])(.*)[^0-9]([B])(.*)[^0-9]([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)[^0-9]([E])(.*)/;
                 self.eepromM145S0RegEx = /M145 S0 ([H])(.*)[^0-9]([B])(.*)[^0-9]([F])(.*)/;
@@ -64,6 +66,7 @@ $(function() {
                 self.eepromM145S2RegEx = /M145 S2 ([H])(.*)[^0-9]([B])(.*)[^0-9]([F])(.*)/;
                 self.eepromM301RegEx = /M301 ([P])(.*)[^0-9]([I])(.*)[^0-9]([D])(.*)/;
                 self.eepromM204RegEx = /M204 ([P])(.*)[^0-9]([R])(.*)[^0-9]([T])(.*)/;
+                self.eepromM900RegEx = /M900 ([K])(.*)[^0-9]([R])(.*)/;//Linear Advance
             }
         };
 
@@ -78,7 +81,6 @@ $(function() {
 
         //self.setRegExVars('latest');
         self.setRegExVars('Marlin bugfix-2.0.x');
-        //self.setRegExVars(self.firmware_name());
 
         self.isMarlinFirmware = ko.observable(false);
         self.isMarlinFirmware.subscribe(function (newValue) {
@@ -1302,7 +1304,7 @@ $(function() {
                     if (match) {
                         self.FIRMWARE_NAME(match[1] + ' ' + match[2]);
                         self.FIRMWARE_INFO(line.replace('Recv: ', ''));
-                        console.log("EEPROM_plugins set regexvars");
+                        console.debug("EEPROM_plugins set regexvars");
                         self.setRegExVars(self.firmware_name());
                         console.debug('Firmware: ' + self.firmware_name());
                         if (self.marlinRegEx.exec(match[0]))
