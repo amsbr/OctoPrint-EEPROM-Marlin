@@ -77,8 +77,8 @@ $(function() {
         self.marlinRegEx = /Marlin[^\s]*/i;
 
         //self.setRegExVars('latest');
-        //self.setRegExVars('Marlin bugfix-2.0.x');
-        self.setRegExVars(self.firmware_name());
+        self.setRegExVars('Marlin bugfix-2.0.x');
+        //self.setRegExVars(self.firmware_name());
 
         self.isMarlinFirmware = ko.observable(false);
         self.isMarlinFirmware.subscribe(function (newValue) {
@@ -1302,6 +1302,7 @@ $(function() {
                     if (match) {
                         self.FIRMWARE_NAME(match[1] + ' ' + match[2]);
                         self.FIRMWARE_INFO(line.replace('Recv: ', ''));
+                        console.log("EEPROM_plugins set regexvars");
                         self.setRegExVars(self.firmware_name());
                         console.debug('Firmware: ' + self.firmware_name());
                         if (self.marlinRegEx.exec(match[0]))
