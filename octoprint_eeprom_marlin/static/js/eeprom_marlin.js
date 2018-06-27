@@ -16,21 +16,30 @@ $(function() {
             // All versions
             self.eepromM501RegEx = /M501/;
             self.eepromOKRegEx = /ok/;
-            self.eepromM92RegEx = /M92 ([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)[^0-9]([E])(.*)/;
-            self.eepromM203RegEx = /M203 ([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)[^0-9]([E])(.*)/;
-            self.eepromM201RegEx = /M201 ([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)[^0-9]([E])(.*)/;
-            self.eepromM206RegEx = /M206 ([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)/;
-            self.eepromM851RegEx = /M851 ([Z])(.*)/;
-            self.eepromM200RegEx = /M200 ([D])(.*)/;
-            self.eepromM666RegEx = /M666 ([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)/;
-            self.eepromM304RegEx = /M304 ([P])(.*)[^0-9]([I])(.*)[^0-9]([D])(.*)/;
-            self.eepromM665RegEx = /M665 ([L])(.*)[^0-9]([R])(.*)[^0-9]([H])(.*)[^0-9]([S])(.*)[^0-9]([B])(.*)[^0-9]([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)/;
-            self.eepromM420RegEx = /M420 ([S])([0-1]*)[^0-9]*([Z]*)(.*)/;
-            self.eepromM900RegEx = /M900 ([K])(.*)[^0-9]([R])(.*)/;
-
+            self.eepromM92RegEx = /M92 ([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)[^0-9]([E])(.*)/;//Steps per unit
+            self.eepromM200RegEx = /M200 ([D])(.*)/;//Filament settings
+            self.eepromM201RegEx = /M201 ([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)[^0-9]([E])(.*)/;//Maximum Acceleration (units/s2)
+            self.eepromM203RegEx = /M203 ([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)[^0-9]([E])(.*)/;//Maximum feedrates (units/s)            
+            self.eepromM206RegEx = /M206 ([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)/;//Home offset
+            self.eepromM304RegEx = /M304 ([P])(.*)[^0-9]([I])(.*)[^0-9]([D])(.*)/;//bed PID settings
+            self.eepromM420RegEx = /M420 ([S])([0-1]*)[^0-9]*([Z]*)(.*)/;//Auto Bed Leveling
+            self.eepromM851RegEx = /M851 ([Z])(.*)/;//Z-Probe Offset (mm)
+            self.eepromM665RegEx = /M665 ([L])(.*)[^0-9]([R])(.*)[^0-9]([H])(.*)[^0-9]([S])(.*)[^0-9]([B])(.*)[^0-9]([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)/;//delta config
+            self.eepromM666RegEx = /M666 ([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)/;//delta Enstop adjustement
+            self.eepromM900RegEx = /M900 ([K])(.*)[^0-9]([R])(.*)/;//Linear Advance
+           
 
             // Specific versions
-            if (version == 'latest' || version == 'Marlin 1.1.0-RC8' || version == 'Marlin 1.1.1' || version == 'Marlin 1.1.2' || version == 'Marlin 1.1.3' || version == 'Marlin 1.1.4' || version == 'Marlin 1.1.5' || version == 'Marlin 1.1.6' || version == 'Marlin 1.1.7' || version == 'Marlin 1.1.8') {
+            if( version == "Marlin bugfix-2.0.x") {
+                self.eepromM900RegEx = /M900 ([K])([0-9.]+)(.*)/;//bugfix2.0.x
+                //Advanced: B<min_segment_time_us> S<min_feedrate> T<min_travel_feedrate> X<max_x_jerk> Y<max_y_jerk> Z<max_z_jerk> E<max_e_jerk>
+                self.eepromM205RegEx = /M205 ([B])(.*)[^0-9]([S])(.*)[^0-9]([T])(.*)[^0-9]([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)[^0-9]([E])(.*)/;
+                self.eepromM145S0RegEx = /M145 S0 ([H])(.*)[^0-9]([B])(.*)[^0-9]([F])(.*)/;//Material heatup parameters
+                self.eepromM145S1RegEx = /M145 S1 ([H])(.*)[^0-9]([B])(.*)[^0-9]([F])(.*)/;//Material heatup parameters
+                self.eepromM145S2RegEx = /M145 S2 ([H])(.*)[^0-9]([B])(.*)[^0-9]([F])(.*)/;//Material heatup parameters
+                self.eepromM301RegEx = /M301 ([P])(.*)[^0-9]([I])(.*)[^0-9]([D])(.*)/;//hotend PID settings
+                self.eepromM204RegEx = /M204 ([P])(.*)[^0-9]([R])(.*)[^0-9]([T])(.*)/;//Acceleration (units/s2): P<print_accel> R<retract_accel> T<travel_accel>
+            } else if (version == 'latest' || version == 'Marlin 1.1.0-RC8' || version == 'Marlin 1.1.1' || version == 'Marlin 1.1.2' || version == 'Marlin 1.1.3' || version == 'Marlin 1.1.4' || version == 'Marlin 1.1.5' || version == 'Marlin 1.1.6' || version == 'Marlin 1.1.7' || version == 'Marlin 1.1.8') {
                 self.eepromM205RegEx = /M205 ([S])(.*)[^0-9]([T])(.*)[^0-9]([B])(.*)[^0-9]([X])(.*)[^0-9]([Y])(.*)[^0-9]([Z])(.*)[^0-9]([E])(.*)/;
                 self.eepromM145S0RegEx = /M145 S0 ([H])(.*)[^0-9]([B])(.*)[^0-9]([F])(.*)/;
                 self.eepromM145S1RegEx = /M145 S1 ([H])(.*)[^0-9]([B])(.*)[^0-9]([F])(.*)/;
@@ -67,7 +76,9 @@ $(function() {
         self.firmwareCapRegEx = /Cap:([^\s]*)/i;
         self.marlinRegEx = /Marlin[^\s]*/i;
 
-        self.setRegExVars('latest');
+        //self.setRegExVars('latest');
+        //self.setRegExVars('Marlin bugfix-2.0.x');
+        self.setRegExVars(self.firmware_name());
 
         self.isMarlinFirmware = ko.observable(false);
         self.isMarlinFirmware.subscribe(function (newValue) {
@@ -440,8 +451,9 @@ $(function() {
                     description: ''
                 });
             }
-            console.log(self.firmware_name());
+            
             if (self.firmware_name() == 'Marlin 1.1.0-RC8' || self.firmware_name() == 'Marlin 1.1.1' || self.firmware_name() == 'Marlin 1.1.2' || self.firmware_name() == 'Marlin 1.1.3' || self.firmware_name() == 'Marlin 1.1.4' || self.firmware_name() == 'Marlin 1.1.5' || self.firmware_name() == 'Marlin 1.1.6' || self.firmware_name() == 'Marlin 1.1.7' || self.firmware_name() == 'Marlin 1.1.8' || self.firmware_name() == 'Marlin bugfix-2.0.x' || self.firmware_name() == 'Marlin bugfix-2.0.x (Github)') {
+                console.log(self.firmware_name());
                 // M205 Advanced variables
                 match = self.eepromM205RegEx.exec(line);
                 if (match) {
