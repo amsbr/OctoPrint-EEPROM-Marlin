@@ -168,7 +168,7 @@ $(function() {
                     label: 'X axis',
                     origValue: ((restoreBackup) ? '' : match[2]),
                     value: match[2],
-                    unit: 'mm',
+                    unit: 'mm/s',
                     description: 'rate per unit'
                 });
 
@@ -177,7 +177,7 @@ $(function() {
                     label: 'Y axis',
                     origValue: ((restoreBackup) ? '' : match[4]),
                     value: match[4],
-                    unit: 'mm',
+                    unit: 'mm/s',
                     description: 'rate per unit'
                 });
 
@@ -186,7 +186,7 @@ $(function() {
                     label: 'Z axis',
                     origValue: ((restoreBackup) ? '' : match[6]),
                     value: match[6],
-                    unit: 'mm',
+                    unit: 'mm/s',
                     description: 'rate per unit'
                 });
 
@@ -195,7 +195,7 @@ $(function() {
                     label: 'Extruder',
                     origValue: ((restoreBackup) ? '' : match[8]),
                     value: match[8],
-                    unit: 'mm',
+                    unit: 'mm/s',
                     description: 'rate per unit'
                 });
             }
